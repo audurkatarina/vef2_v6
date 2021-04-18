@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
 import s from './Characters.module.scss';
 import { Button } from '../button/Button';
-import { ICharacter } from '../../types';
+import { IAllPeople, ICharacter, ICharactersAnswerGQL } from '../../types';
 
 type Props = {
+  peopleResponse?: IAllPeople | null;
 };
 
 /**
@@ -24,18 +25,37 @@ type Props = {
  */
 type ExcludesFalse = <T>(x: T | null | undefined | false) => x is T;
 
-export function Characters({ }: Props): JSX.Element {
+export function Characters({ peopleResponse }: Props): JSX.Element {
   // TODO meðhöndla loading state, ekki þarf sérstaklega að villu state
   const [loading, setLoading] = useState<boolean>(false);
 
   // TODO setja grunngögn sem koma frá server
-  const [characters, setCharacters] = useState<Array<ICharacter>>([]);
+  const [characters, setCharacters] = useState<Array<ICharacter>>( peopleResponse?.people ?? []);
 
-  const [nextPage, setNextPage] = useState<string | null>(null);
+  const [nextPage, setNextPage] = useState<string | null>(peopleResponse?.pageInfo?.endCursor ?? null);
 
   const fetchMore = async (): Promise<void> => {
     // TODO sækja gögn frá /pages/api/characters.ts (gegnum /api/characters), ef það eru fleiri
     // (sjá pageInfo.hasNextPage) með cursor úr pageInfo.endCursor
+    setLoading(true);
+    let json;
+    const url = `/api/characters?after=${nextPage}`;
+    try {
+      const result = await fetch(url);
+      json = await result.json();
+      const answer: ICharactersAnswerGQL = json;
+      setCharacters([...characters, ...answer?.allPeople?.people ?? []]);
+      if(answer?.allPeople?.pageInfo?.hasNextPage) {
+        setNextPage(answer?.allPeople?.pageInfo?.endCursor ?? null);
+      } else {
+        setNextPage(null);
+      }
+    } catch (e) {
+      console.error('Gat ekki sótt gögn', e);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
