@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Link from 'next/link';
 
@@ -23,38 +23,39 @@ type Props = {
  *  .filter((Boolean as unknown) as ExcludesFalse);
  * items verður Array<T> en ekki Array<T | null>
  */
-type ExcludesFalse = <T>(x: T | null | undefined | false) => x is T;
+// type ExcludesFalse = <T>(x: T | null | undefined | false) => x is T;
 
 export function Characters({ peopleResponse }: Props): JSX.Element {
   // TODO meðhöndla loading state, ekki þarf sérstaklega að villu state
   const [loading, setLoading] = useState<boolean>(false);
 
   // TODO setja grunngögn sem koma frá server
-  const [characters, setCharacters] = useState<Array<ICharacter>>( peopleResponse?.people ?? []);
+  const [characters, setCharacters] = useState<Array<ICharacter>>(peopleResponse?.people ?? []);
 
-  const [nextPage, setNextPage] = useState<string | null>(peopleResponse?.pageInfo?.endCursor ?? null);
+  const [
+    nextPage,
+    setNextPage,
+  ] = useState<string | null>(peopleResponse?.pageInfo?.endCursor ?? '');
 
   const fetchMore = async (): Promise<void> => {
     // TODO sækja gögn frá /pages/api/characters.ts (gegnum /api/characters), ef það eru fleiri
     // (sjá pageInfo.hasNextPage) með cursor úr pageInfo.endCursor
     setLoading(true);
-    let json;
+    let result;
     const url = `/api/characters?after=${nextPage}`;
     try {
-      const result = await fetch(url);
-      json = await result.json();
-      const answer: ICharactersAnswerGQL = json;
-      setCharacters([...characters, ...answer?.allPeople?.people ?? []]);
-      if(answer?.allPeople?.pageInfo?.hasNextPage) {
-        setNextPage(answer?.allPeople?.pageInfo?.endCursor ?? null);
-      } else {
-        setNextPage(null);
-      }
+      result = await fetch(url);
     } catch (e) {
       console.error('Gat ekki sótt gögn', e);
       throw e;
-    } finally {
-      setLoading(false);
+    }
+    const json = await result.json();
+    const answer: ICharactersAnswerGQL = json;
+    setCharacters([...characters, ...answer?.allPeople?.people ?? []]);
+    setNextPage(answer?.allPeople?.pageInfo?.endCursor ?? '');
+    setLoading(false)
+    if (!answer?.allPeople?.pageInfo?.hasNextPage) {
+      setLoading(true);
     }
   };
 

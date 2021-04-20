@@ -28,7 +28,7 @@ export default function PageComponent(
       </Head>
       <h1>Star Wars films</h1>
       {films.map((film, i) => (
-        <Film key={i} film={film}/>
+        <Film key={i} film={film} />
       ))}
     </Layout>
   );

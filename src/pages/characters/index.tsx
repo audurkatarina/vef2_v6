@@ -4,7 +4,7 @@ import { Characters } from '../../components/characters/Characters';
 
 import { Layout } from '../../components/layout/Layout';
 import { fetchCharacters } from '../../lib/swapi';
-import { IAllPeople, ICharacter } from '../../types';
+import { IAllPeople } from '../../types';
 
 export type PageProps = {
   peopleResponse: IAllPeople | null; // TODO EKKI any
@@ -20,7 +20,7 @@ export default function PageComponent(
         <title>Star Wars characters</title>
       </Head>
       <h1>Star Wars characters</h1>
-      <Characters peopleResponse={peopleResponse}/>
+      <Characters peopleResponse={peopleResponse} />
     </Layout>
   );
 }
