@@ -53,7 +53,7 @@ export function Characters({ peopleResponse }: Props): JSX.Element {
     const answer: ICharactersAnswerGQL = json;
     setCharacters([...characters, ...answer?.allPeople?.people ?? []]);
     setNextPage(answer?.allPeople?.pageInfo?.endCursor ?? '');
-    setLoading(false)
+    setLoading(false);
     if (!answer?.allPeople?.pageInfo?.hasNextPage) {
       setLoading(true);
     }
