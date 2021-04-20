@@ -11,18 +11,30 @@ export function Person({ person }: Props): JSX.Element {
     <div className={s.person}>
       <h1>{person?.name}</h1>
       <div>
-        <p>Birth year:</p>
-        <p>{person?.birthYear}</p>
-        <p>Eye color:</p>
-        <p>{person?.eyeColor}</p>
-        <p>Hair color:</p>
-        <p>{person?.hairColor}</p>
-        <p>Height:</p>
-        <p>{person?.height} cm</p>
-        <p>Mass:</p>
-        <p>{person?.mass} kg</p>
+        <div>
+          <h4>Birth year:</h4>
+          <p>{person?.birthYear}</p>
+        </div>
+        <div>
+          <h4>Eye color:</h4>
+          <p>{person?.eyeColor}</p>
+        </div>
+        <div>
+          <h4>Hair color:</h4>
+          <p>{person?.hairColor}</p>
+        </div>
+        <div>
+          <h4>Height:</h4>
+          <p>{person?.height} cm</p>
+        </div>
+        <div>
+          <h4>Mass:</h4>
+          <p>{person?.mass} kg</p>
+        </div>
       </div>
-      <Link href="/characters">Back to characters</Link>
+      <div className={s.person__link}>
+        <Link href="/characters">Back to characters</Link>
+      </div>
     </div>
   );
 }

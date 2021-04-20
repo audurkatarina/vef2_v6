@@ -1,6 +1,10 @@
 @import '../../styles/config';
 
 .layout {
+  &__link {
+    margin-left: 10px;
+  }
+
   &__header {
     margin-bottom: 1rem;
   }

@@ -1,4 +1,36 @@
 
 .film {
+
+  &__list {
+    display: flex;
+    margin-top: 2rem;
+  }
+
+  &__listItem {
+    &:first-child {
+      margin-right: 2rem;
+    }
+  }
+
+  &__openingCrawl {
+    font-family: monospace;
+  }
+
+  &__char {
+    &__list {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    &__listItem {
+      margin-right: 1rem;
+    }
+  }
+
+  &__line {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
   
 }
